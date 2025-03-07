@@ -11,8 +11,9 @@ import 'package:image/image.dart' as img;
 
 class EditorFramePage extends StatefulWidget {
   final String afterPath;
+  final int? subActionIndex;
 
-  const EditorFramePage({super.key, required this.afterPath});
+  const EditorFramePage({super.key, required this.afterPath, this.subActionIndex});
 
   @override
   State<EditorFramePage> createState() => _EditorFramePageState();
@@ -45,6 +46,7 @@ class _EditorFramePageState extends State<EditorFramePage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               FramePan(
+                initialIndex: widget.subActionIndex,
                 frs: EditorUtil.frameList,
                 usingDetail: _frameDetail,
                 onChanged: ({FrameDetail? item, String? path}) {

@@ -13,7 +13,8 @@ import '../widgets/diff/diff_widget.dart';
 import '../widgets/filters/filters_pan.dart';
 
 class EditorFilterPage extends StatefulWidget {
-  const EditorFilterPage({super.key});
+  final int? subActionIndex;
+  const EditorFilterPage({super.key, this.subActionIndex = 0});
 
   @override
   State<EditorFilterPage> createState() => _EditorFilterPageState();
@@ -93,6 +94,7 @@ class _EditorFilterPageState extends State<EditorFilterPage> {
                   fds: EditorUtil.filterList,
                   sourceFiltersConfig: _currentConfig,
                   usingDetail: _filterDetail,
+                  initialIndex: widget.subActionIndex,
                   onChanged: ({FilterDetail? item}) {
                     _filterDetail = item;
                     _updateFilterNoise();

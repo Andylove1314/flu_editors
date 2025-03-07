@@ -275,7 +275,12 @@ class _MyAppState extends State<MyApp> {
 
     group1.list = [detail1, detail2];
 
-    return [group1];
+
+    FilterData group2 = FilterData();
+    group2.groupName = 'class2';
+    group2.list = [detail1, detail2];
+
+    return [group1, group2];
   }
 
   Future<List<StickerData>> _fetchStickers() async {
@@ -306,7 +311,12 @@ class _MyAppState extends State<MyApp> {
 
     group1.list = [detail1, detail2];
 
-    return [group1];
+
+    StickerData group2 = StickerData();
+    group2.groupName = 'class2';
+    group2.list = [detail1, detail2];
+
+    return [group1, group2];
   }
 
   Future<List<FontsData>> _fetchFonts() async {
@@ -371,6 +381,10 @@ class _MyAppState extends State<MyApp> {
 
     group1.list = [detail1, detail2];
 
-    return [group1];
+    FrameData group2 = FrameData();
+    group2.groupName = 'Sample';
+    group2.list = [detail1, detail2];
+
+    return [group1, group2];
   }
 }

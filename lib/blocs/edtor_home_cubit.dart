@@ -12,13 +12,14 @@ class EditorHomeCubit extends Cubit<EditorHomeState> {
 
   EditorHomeCubit(String orignalPath) : super(EditorHomeState(orignalPath));
 
-  Future<String> getSaveImagePath() async{
+  Future<String> getSaveImagePath() async {
     // await EditorUtil.saveCallback?.call(state.afterPath);
     saved = true;
     return state.afterPath;
   }
 
-  Future<void> toEditor(BuildContext context, EditorType type) async {
+  Future<void> toEditor(BuildContext context, EditorType type,
+      [int? subActionIndex]) async {
     saved = false;
     if (type == EditorType.crop) {
       EditorUtil.goCropPage(context, this.state.afterPath);
@@ -28,7 +29,7 @@ class EditorHomeCubit extends Cubit<EditorHomeState> {
       if (EditorUtil.filterList.isEmpty) {
         await EditorUtil.fetchFilterList(context);
       }
-      EditorUtil.goFilterPage(context, this.state.afterPath);
+      EditorUtil.goFilterPage(context, this.state.afterPath, subActionIndex);
     } else if (type == EditorType.blur) {
       EditorUtil.showToast('功能开发中...');
       // ... todo
@@ -36,17 +37,17 @@ class EditorHomeCubit extends Cubit<EditorHomeState> {
       if (EditorUtil.stickerList.isEmpty) {
         await EditorUtil.fetchStickerList(context);
       }
-      EditorUtil.goStickerPage(context, this.state.afterPath);
+      EditorUtil.goStickerPage(context, this.state.afterPath, subActionIndex);
     } else if (type == EditorType.text) {
       if (EditorUtil.fontList.isEmpty) {
         await EditorUtil.fetchFontList(context);
       }
-      EditorUtil.goFontPage(context, this.state.afterPath);
+      EditorUtil.goFontPage(context, this.state.afterPath, subActionIndex);
     } else if (type == EditorType.frame) {
       if (EditorUtil.frameList.isEmpty) {
         await EditorUtil.fetchFrameList(context);
       }
-      EditorUtil.goFramePage(context, this.state.afterPath);
+      EditorUtil.goFramePage(context, this.state.afterPath, subActionIndex);
     }
   }
 }

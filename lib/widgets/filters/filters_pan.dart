@@ -19,13 +19,16 @@ class FiltersPan extends StatefulWidget {
 
   final Function() onEffectSave;
 
+  final int? initialIndex;
+
   FiltersPan(
       {super.key,
       required this.fds,
       required this.sourceFiltersConfig,
       required this.onChanged,
       required this.onEffectSave,
-      this.usingDetail});
+      this.usingDetail,
+      this.initialIndex});
 
   @override
   State<FiltersPan> createState() => _FiltersPanState();
@@ -37,18 +40,21 @@ class _FiltersPanState extends State<FiltersPan>
 
   bool vipFilter = false;
 
-  int position = 0;
+  late int position;
 
   @override
   void initState() {
     super.initState();
+    position = widget.initialIndex ?? 0;
+    
     _tabController =
-        TabController(length: widget.fds.length, vsync: this, initialIndex: 0)
+        TabController(length: widget.fds.length, vsync: this, initialIndex: widget.initialIndex ?? 0)
           ..addListener(() {
             setState(() {
               position = _tabController.index;
             });
           });
+    
   }
 
   @override

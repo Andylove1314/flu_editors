@@ -57,6 +57,7 @@ class _FilterClassWidgetState extends State<FilterClassWidget>{
       isScrollable: true,
       labelPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
       onTap: (index) {
+        debugPrint('onTap: $index');
         widget.tabController.animateTo(index);
       },
       dividerColor: Colors.transparent,

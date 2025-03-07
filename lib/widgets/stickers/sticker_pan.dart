@@ -10,7 +10,7 @@ import '../vip_bar.dart';
 
 class StickerPan extends StatefulWidget {
   final List<StickerData> sts;
-
+  final int? initialIndex;
   StickDetail? usingDetail;
 
   final Function({StickDetail? item, String? path}) onChanged;
@@ -22,7 +22,8 @@ class StickerPan extends StatefulWidget {
       required this.sts,
       required this.onChanged,
       required this.onEffectSave,
-      this.usingDetail});
+      this.usingDetail,
+      this.initialIndex});
 
   @override
   State<StickerPan> createState() => _StickerPanState();
@@ -34,13 +35,15 @@ class _StickerPanState extends State<StickerPan>
 
   bool vipSticker = false;
 
-  int position = 0;
+  late int position;
 
   @override
   void initState() {
     super.initState();
+    position = widget.initialIndex ?? 0;
+
     _tabController =
-        TabController(length: widget.sts.length, vsync: this, initialIndex: 0)
+        TabController(length: widget.sts.length, vsync: this, initialIndex: widget.initialIndex ?? 0)
           ..addListener(() {
             setState(() {
               position = _tabController.index;
@@ -89,7 +92,7 @@ class _StickerPanState extends State<StickerPan>
           ),
         ),
         ConfirmBar(
-          content:  Center(
+          content: Center(
             child: Text(
               EditorLang.of(context).editor_sticker,
               style: const TextStyle(

@@ -12,8 +12,9 @@ import '../widgets/stickers/sticker_pre_view.dart';
 
 class EditorStickerPage extends StatefulWidget {
   final String afterPath;
+  final int? subActionIndex;
 
-  const EditorStickerPage({super.key, required this.afterPath});
+  const EditorStickerPage({super.key, required this.afterPath, this.subActionIndex});
 
   @override
   State<EditorStickerPage> createState() => _EditorStickerPageState();
@@ -86,6 +87,7 @@ class _EditorStickerPageState extends State<EditorStickerPage> {
           )),
           StickerPan(
             sts: EditorUtil.stickerList,
+            initialIndex: widget.subActionIndex,
             onChanged: ({StickDetail? item, String? path}) {
               setState(() {
                 currentStickerPath = path;

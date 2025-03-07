@@ -42,6 +42,8 @@ class FontPan extends StatefulWidget {
   /// 保存
   final Function() onEffectSave;
 
+  final int? initialIndex;
+
   FontPan(
       {super.key,
       required this.onFontChanged,
@@ -62,7 +64,8 @@ class FontPan extends StatefulWidget {
       this.underline,
       this.textAlign,
       this.worldSpace,
-      this.lineSpace});
+      this.lineSpace,
+      this.initialIndex});
 
   @override
   State<StatefulWidget> createState() => _FontPanState();
@@ -71,14 +74,15 @@ class FontPan extends StatefulWidget {
 class _FontPanState extends State<FontPan> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  int position = 0;
+  late int position;
   bool showViptip = false;
 
   @override
   void initState() {
     super.initState();
+    position = widget.initialIndex ?? 0;
     _tabController =
-        TabController(length: fontActions.length, vsync: this, initialIndex: 0)
+        TabController(length: fontActions.length, vsync: this, initialIndex: widget.initialIndex ?? 0)
           ..addListener(() {
             setState(() {
               position = _tabController.index;

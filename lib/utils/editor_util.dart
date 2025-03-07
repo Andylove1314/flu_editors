@@ -46,11 +46,11 @@ class EditorUtil {
   }
 
   /// 滤镜 action
-  static void goFilterPage(BuildContext context, String afterPath) {
+  static void goFilterPage(BuildContext context, String afterPath, [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => BlocProvider(
         create: (_) => SourceImageCubit(afterPath),
-        child: const EditorFilterPage(),
+        child: EditorFilterPage(subActionIndex: subActionIndex),
       ),
       transitionDuration: _transDur,
       // You can adjust the duration
@@ -85,10 +85,10 @@ class EditorUtil {
   }
 
   /// 贴纸 action
-  static void goStickerPage(BuildContext context, String afterPath) {
+  static void goStickerPage(BuildContext context, String afterPath, [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          EditorStickerPage(afterPath: afterPath),
+          EditorStickerPage(afterPath: afterPath, subActionIndex: subActionIndex),
       transitionDuration: _transDur,
       // You can adjust the duration
       transitionsBuilder: _transAnim,
@@ -96,10 +96,11 @@ class EditorUtil {
   }
 
   /// 字体 action
-  static void goFontPage(BuildContext context, String afterPath) {
+  static void goFontPage(BuildContext context, String afterPath, [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => EditorFontPage(
         afterPath: afterPath,
+        subActionIndex: subActionIndex,
       ),
       transitionDuration: _transDur,
       // You can adjust the duration
@@ -108,10 +109,11 @@ class EditorUtil {
   }
 
   /// 相框 action
-  static void goFramePage(BuildContext context, String afterPath) {
+  static void goFramePage(BuildContext context, String afterPath, [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => EditorFramePage(
         afterPath: afterPath,
+        subActionIndex: subActionIndex,
       ),
       transitionDuration: _transDur,
       // You can adjust the duration

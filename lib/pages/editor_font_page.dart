@@ -11,8 +11,9 @@ import '../widgets/fonts/font_pre_view.dart';
 
 class EditorFontPage extends StatefulWidget {
   final String afterPath;
+  final int? subActionIndex;
 
-  const EditorFontPage({super.key, required this.afterPath});
+  const EditorFontPage({super.key, required this.afterPath, this.subActionIndex});
 
   @override
   State<EditorFontPage> createState() => _EditorFontPageState();
@@ -113,6 +114,7 @@ class _EditorFontPageState extends State<EditorFontPage> {
             ],
           )),
           FontPan(
+            initialIndex: widget.subActionIndex,
             fontDetail: _fontDetail,
             color: _color,
             opacity: _opacity,

@@ -17,12 +17,15 @@ class FramePan extends StatefulWidget {
 
   final Function() onEffectSave;
 
+  final int? initialIndex;
+
   FramePan(
       {super.key,
       required this.frs,
       required this.onChanged,
       required this.onEffectSave,
-      this.usingDetail});
+      this.usingDetail,
+      this.initialIndex});
 
   @override
   State<FramePan> createState() => _FramePanState();
@@ -34,13 +37,14 @@ class _FramePanState extends State<FramePan>
 
   bool vipSticker = false;
 
-  int position = 0;
+  late int position;
 
   @override
   void initState() {
     super.initState();
+    position = widget.initialIndex ?? 0;
     _tabController =
-        TabController(length: widget.frs.length, vsync: this, initialIndex: 0)
+        TabController(length: widget.frs.length, vsync: this, initialIndex: widget.initialIndex ?? 0)
           ..addListener(() {
             setState(() {
               position = _tabController.index;

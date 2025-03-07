@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:extended_image/extended_image.dart';
+import 'package:flu_editor/models/action_data.dart';
 import 'package:flu_editor/utils/editor_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,12 +16,24 @@ import '../widgets/main_pan.dart';
 class EditorHomePage extends StatelessWidget {
   final String orignal;
 
-  const EditorHomePage({super.key, required this.orignal});
+  final int? actionIndex;
+  final int? subActionIndex;
+
+  const EditorHomePage(
+      {super.key,
+      required this.orignal,
+      this.actionIndex,
+      this.subActionIndex});
 
   final _panHeight = 100.0;
 
   @override
   Widget build(BuildContext context) {
+    // 在构建后显示功能提示弹窗
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showFeatureDialog(context);
+    });
+
     return WillPopScope(
       onWillPop: () {
         if (orignal != context.read<EditorHomeCubit>().state.afterPath &&
@@ -67,13 +81,16 @@ class EditorHomePage extends StatelessWidget {
         BlocBuilder<EditorHomeCubit, EditorHomeState>(
           builder: (BuildContext context, EditorHomeState state) {
             return saveAction(
-                action: orignal != context.read<EditorHomeCubit>().state.afterPath
-                    ? () async {
-                        // 保存图片
-                        final path = await context.read<EditorHomeCubit>().getSaveImagePath();
-                        EditorUtil.homeSavedCallback?.call(context, path);
-                      }
-                    : null);
+                action:
+                    orignal != context.read<EditorHomeCubit>().state.afterPath
+                        ? () async {
+                            // 保存图片
+                            final path = await context
+                                .read<EditorHomeCubit>()
+                                .getSaveImagePath();
+                            EditorUtil.homeSavedCallback?.call(context, path);
+                          }
+                        : null);
           },
         )
       ],
@@ -110,6 +127,42 @@ class EditorHomePage extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+
+  // 修改功能提示弹窗方法
+  void _showFeatureDialog(BuildContext context) {
+    // 保存当前上下文中的 cubit 引用
+    final editorCubit = context.read<EditorHomeCubit>();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('新功能提示'),
+          content: Text('我们添加了新的编辑功能，立即体验？'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text('稍后再说'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                // 使用保存的 cubit 引用而不是从对话框上下文中读取
+                editorCubit.toEditor(
+                  context, // 使用原始上下文
+                  EditorType.values[actionIndex ?? 6],
+                  subActionIndex ?? 1,
+                );
+              },
+              child: Text('立即体验'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
