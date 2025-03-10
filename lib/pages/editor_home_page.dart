@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:extended_image/extended_image.dart';
-import 'package:flu_editor/models/action_data.dart';
 import 'package:flu_editor/utils/editor_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,14 +14,16 @@ import '../widgets/main_pan.dart';
 class EditorHomePage extends StatelessWidget {
   final String orignal;
 
-  final int? actionIndex;
-  final int? subActionIndex;
+  final bool? showFeatureDialog;
+  final EditorType? groupType;
+  final String? subGroupId;
 
   const EditorHomePage(
       {super.key,
       required this.orignal,
-      this.actionIndex,
-      this.subActionIndex});
+      this.groupType,
+      this.subGroupId,
+      this.showFeatureDialog = false});
 
   final _panHeight = 100.0;
 
@@ -31,7 +31,9 @@ class EditorHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // 在构建后显示功能提示弹窗
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showFeatureDialog(context);
+      if (showFeatureDialog == true) {
+        _showFeatureDialog(context);
+      }
     });
 
     return WillPopScope(
@@ -139,26 +141,46 @@ class EditorHomePage extends StatelessWidget {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text('新功能提示'),
-          content: Text('我们添加了新的编辑功能，立即体验？'),
+          title: const Text(
+            '新功能提示',
+            style: TextStyle(
+                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          content: const Text(
+            '我们添加了新的编辑功能，立即体验？',
+            style: TextStyle(
+                color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: Text('稍后再说'),
+              child: const Text(
+                '稍后再说',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
-                // 使用保存的 cubit 引用而不是从对话框上下文中读取
+ 
                 editorCubit.toEditor(
                   context, // 使用原始上下文
-                  EditorType.values[actionIndex ?? 6],
-                  subActionIndex ?? 1,
+                  groupType ?? EditorType.crop,
+                  subGroupId,
                 );
               },
-              child: Text('立即体验'),
+              child: const Text(
+                '立即体验',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
           ],
         );

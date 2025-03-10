@@ -46,7 +46,8 @@ class EditorUtil {
   }
 
   /// 滤镜 action
-  static void goFilterPage(BuildContext context, String afterPath, [int? subActionIndex]) {
+  static void goFilterPage(BuildContext context, String afterPath,
+      [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => BlocProvider(
         create: (_) => SourceImageCubit(afterPath),
@@ -85,10 +86,12 @@ class EditorUtil {
   }
 
   /// 贴纸 action
-  static void goStickerPage(BuildContext context, String afterPath, [int? subActionIndex]) {
+  static void goStickerPage(BuildContext context, String afterPath,
+      [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          EditorStickerPage(afterPath: afterPath, subActionIndex: subActionIndex),
+          EditorStickerPage(
+              afterPath: afterPath, subActionIndex: subActionIndex),
       transitionDuration: _transDur,
       // You can adjust the duration
       transitionsBuilder: _transAnim,
@@ -96,7 +99,8 @@ class EditorUtil {
   }
 
   /// 字体 action
-  static void goFontPage(BuildContext context, String afterPath, [int? subActionIndex]) {
+  static void goFontPage(BuildContext context, String afterPath,
+      [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => EditorFontPage(
         afterPath: afterPath,
@@ -109,7 +113,8 @@ class EditorUtil {
   }
 
   /// 相框 action
-  static void goFramePage(BuildContext context, String afterPath, [int? subActionIndex]) {
+  static void goFramePage(BuildContext context, String afterPath,
+      [int? subActionIndex]) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => EditorFramePage(
         afterPath: afterPath,
@@ -122,27 +127,32 @@ class EditorUtil {
   }
 
   /// 编辑页面
-  static void goFluEditor(BuildContext context,
-      {required String orignal,
-      EditorType? type,
-      bool singleEditorSave = true,
-      VipStatusCallback? vipStatusCb,
-      VipActionCallback? vipActionCb,
-      SaveCallback? saveCb,
-      LoadingWidgetCallback? loadWidgetCb,
-      ToastActionCallback? toastActionCb,
-      SaveEffectCallback? saveEffectCb,
-      DeleteEffectCallback? deleteEffectCb,
-      EffectsCallback? effectsCb,
-      FiltersCallback? filtersCb,
-      StickersCallback? stickersCb,
-      FontsCallback? fontsCb,
-      FramesCallback? framesCb,
-      HomeSavedCallback? homeSavedCb,
-      BannerAdWidgetCallback? bannerAdWidgetCb,
-      NativeAdWidgetCallback? nativeAdWidgetCb,
-      AdShowCallback? adShowWidgetCb,
-      LoginCheckCallback? loginCheckCb}) async {
+  static void goFluEditor(
+    BuildContext context, {
+    required String orignal,
+    EditorType? type,
+    bool singleEditorSave = true,
+    VipStatusCallback? vipStatusCb,
+    VipActionCallback? vipActionCb,
+    SaveCallback? saveCb,
+    LoadingWidgetCallback? loadWidgetCb,
+    ToastActionCallback? toastActionCb,
+    SaveEffectCallback? saveEffectCb,
+    DeleteEffectCallback? deleteEffectCb,
+    EffectsCallback? effectsCb,
+    FiltersCallback? filtersCb,
+    StickersCallback? stickersCb,
+    FontsCallback? fontsCb,
+    FramesCallback? framesCb,
+    HomeSavedCallback? homeSavedCb,
+    BannerAdWidgetCallback? bannerAdWidgetCb,
+    NativeAdWidgetCallback? nativeAdWidgetCb,
+    AdShowCallback? adShowWidgetCb,
+    LoginCheckCallback? loginCheckCb,
+    bool? showFeatureDialog,
+    String? groupName,
+    String? subGroupId,
+  }) async {
     _registerMultGlsl();
 
     vipStatusCallback = vipStatusCb;
@@ -166,6 +176,9 @@ class EditorUtil {
     editorType = type;
 
     singleEditorSavetoAlbum = singleEditorSave;
+    showFeatureDialog = showFeatureDialog;
+    groupName = groupName;
+    subGroupId = subGroupId;
 
     if (EditorType.crop == type) {
       goCropPage(context, orignal);
@@ -218,6 +231,8 @@ class EditorUtil {
 
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
+        EditorType? groupType = EditorType.fromString(groupName);
+
         return MultiBlocProvider(
           providers: [
             BlocProvider<EditorHomeCubit>(create: (context) {
@@ -226,7 +241,12 @@ class EditorUtil {
             }),
             // ...
           ],
-          child: EditorHomePage(orignal: orignal),
+          child: EditorHomePage(
+            orignal: orignal,
+            showFeatureDialog: showFeatureDialog,
+            groupType: groupType,
+            subGroupId: subGroupId,
+          ),
         );
       },
     ));
@@ -359,7 +379,7 @@ class EditorUtil {
 
   static Future<img.Image?> _uint8ListToImage(Uint8List uint8List) async {
     // 解码 Uint8List 为 ui.Image
-    img.Image? image = await img.decodeImage(uint8List);
+    img.Image? image = img.decodeImage(uint8List);
 
     return image;
   }
@@ -634,10 +654,6 @@ class EditorUtil {
     final ui.Codec codec2 = await ui.instantiateImageCodec(stickerImageBytes);
     final ui.FrameInfo frame2 = await codec2.getNextFrame();
     final ui.Image stickerImage = frame2.image;
-
-    if (stickerImage == null) {
-      return '';
-    }
 
     // 3. 确定画布大小，使用最大尺寸
     final int canvasWidth = baseImage.width > stickerImage.width

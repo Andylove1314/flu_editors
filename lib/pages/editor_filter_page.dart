@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flu_editor/widgets/parameters_container.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +13,7 @@ import '../widgets/filters/filters_pan.dart';
 
 class EditorFilterPage extends StatefulWidget {
   final int? subActionIndex;
-  const EditorFilterPage({super.key, this.subActionIndex = 0});
+  const EditorFilterPage({super.key, this.subActionIndex});
 
   @override
   State<EditorFilterPage> createState() => _EditorFilterPageState();
@@ -58,7 +57,9 @@ class _EditorFilterPageState extends State<EditorFilterPage> {
             child: BlocBuilder<SourceImageCubit, SourceImageReady>(
               builder: (context, state) {
                 return FadeBeforeAfter(
-                  before: Image.file(File(state.afterPath), width: MediaQuery.of(context).size.width,fit: BoxFit.contain),
+                  before: Image.file(File(state.afterPath),
+                      width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.contain),
                   after: (state.textureSource != null)
                       ? ImageShaderPreview(
                           texture: state.textureSource!,
@@ -115,7 +116,7 @@ class _EditorFilterPageState extends State<EditorFilterPage> {
                         EditorHomeState(after),
                       );
                     } else {
-                      if(EditorUtil.singleEditorSavetoAlbum){
+                      if (EditorUtil.singleEditorSavetoAlbum) {
                         EditorUtil.saveCallback?.call(after);
                       }
                       EditorUtil.clearTmpObject(after);

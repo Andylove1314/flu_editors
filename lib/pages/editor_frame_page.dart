@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flu_editor/widgets/frames/frame_pan.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:photo_view/photo_view.dart';
 
 import '../blocs/edtor_home_cubit.dart';
 import '../flu_editor.dart';
 import '../widgets/frames/frame_bg_container_widget.dart';
-import 'package:image/image.dart' as img;
 
 class EditorFramePage extends StatefulWidget {
   final String afterPath;

@@ -1,16 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flu_editor/flu_editor.dart';
+import 'package:flu_editor/generated/l10n.dart';
 import 'package:flu_editor_example/route_page.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:flutter/services.dart';
-import 'package:flu_editor/generated/l10n.dart';
-import 'package:flu_editor/flu_editor.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -153,12 +152,15 @@ class _MyAppState extends State<MyApp> {
       return;
     }
 
-    _currentImage = image?.path ?? '';
+    _currentImage = image.path ?? '';
     setState(() {});
   }
 
   Future<void> _goEditor(BuildContext context) async {
     EditorUtil.goFluEditor(context,
+    showFeatureDialog: true,
+    groupName: 'filter',
+    subGroupId: '2',
         orignal: _currentImage,
         vipStatusCb: () {
           debugPrint('get vip status: $isVipUser');
@@ -191,11 +193,11 @@ class _MyAppState extends State<MyApp> {
         effectsCb: (page) async => await _fetchPF(),
         saveEffectCb: (effect) async {
           debugPrint('Save pf：${effect.toJson()}');
-          return await true;
+          return true;
         },
         deleteEffectCb: (id) async {
           debugPrint('Delete：$id');
-          return await true;
+          return true;
         },
         filtersCb: () => _fetchLJ(),
         stickersCb: () => _fetchStickers(),
@@ -217,7 +219,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<List<EffectData>> _fetchPF() async {
-    return await [
+    return [
       EffectData.fromJson({
         'name': 'test',
         // 'image':

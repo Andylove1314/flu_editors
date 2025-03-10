@@ -1,7 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flu_editor/utils/editor_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 
 import '../flu_editor.dart';
 
@@ -19,17 +19,23 @@ class EditorHomeCubit extends Cubit<EditorHomeState> {
   }
 
   Future<void> toEditor(BuildContext context, EditorType type,
-      [int? subActionIndex]) async {
+      [String? subGroupId]) async {
     saved = false;
     if (type == EditorType.crop) {
-      EditorUtil.goCropPage(context, this.state.afterPath);
+      EditorUtil.goCropPage(context, state.afterPath);
     } else if (type == EditorType.colors) {
-      EditorUtil.goColorsPage(context, this.state.afterPath);
+      EditorUtil.goColorsPage(context, state.afterPath);
     } else if (type == EditorType.filter) {
       if (EditorUtil.filterList.isEmpty) {
         await EditorUtil.fetchFilterList(context);
       }
-      EditorUtil.goFilterPage(context, this.state.afterPath, subActionIndex);
+      final index = EditorUtil.filterList
+          .indexWhere((element) => element.id.toString() == subGroupId);
+      if (index != -1) {
+        EditorUtil.goFilterPage(context, state.afterPath, index);
+      } else {
+        EditorUtil.goFilterPage(context, state.afterPath);
+      }
     } else if (type == EditorType.blur) {
       EditorUtil.showToast('功能开发中...');
       // ... todo
@@ -37,17 +43,35 @@ class EditorHomeCubit extends Cubit<EditorHomeState> {
       if (EditorUtil.stickerList.isEmpty) {
         await EditorUtil.fetchStickerList(context);
       }
-      EditorUtil.goStickerPage(context, this.state.afterPath, subActionIndex);
+      final index = EditorUtil.stickerList
+          .indexWhere((element) => element.id.toString() == subGroupId);
+      if (index != -1) {
+        EditorUtil.goStickerPage(context, state.afterPath, index);
+      } else {
+        EditorUtil.goStickerPage(context, state.afterPath);
+      }
     } else if (type == EditorType.text) {
       if (EditorUtil.fontList.isEmpty) {
         await EditorUtil.fetchFontList(context);
       }
-      EditorUtil.goFontPage(context, this.state.afterPath, subActionIndex);
+      final index = EditorUtil.fontList
+          .indexWhere((element) => element.id.toString() == subGroupId);
+      if (index != -1) {
+        EditorUtil.goFontPage(context, state.afterPath, index);
+      } else {
+        EditorUtil.goFontPage(context, state.afterPath);
+      }
     } else if (type == EditorType.frame) {
       if (EditorUtil.frameList.isEmpty) {
         await EditorUtil.fetchFrameList(context);
       }
-      EditorUtil.goFramePage(context, this.state.afterPath, subActionIndex);
+      final index = EditorUtil.frameList
+          .indexWhere((element) => element.id.toString() == subGroupId);
+      if (index != -1) {
+        EditorUtil.goFramePage(context, state.afterPath, index);
+      } else {
+        EditorUtil.goFramePage(context, state.afterPath);
+      }
     }
   }
 }
