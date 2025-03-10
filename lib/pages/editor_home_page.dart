@@ -11,19 +11,22 @@ import '../widgets/custom_widget.dart';
 import '../widgets/diff/diff_widget.dart';
 import '../widgets/main_pan.dart';
 
+
 class EditorHomePage extends StatelessWidget {
   final String orignal;
 
   final bool? showFeatureDialog;
   final EditorType? groupType;
   final String? subGroupId;
+  final FeatureDialogBuilder? featureDialogBuilder;
 
   const EditorHomePage(
       {super.key,
       required this.orignal,
       this.groupType,
       this.subGroupId,
-      this.showFeatureDialog = false});
+      this.showFeatureDialog = false,
+      this.featureDialogBuilder});
 
   final _panHeight = 100.0;
 
@@ -32,7 +35,7 @@ class EditorHomePage extends StatelessWidget {
     // 在构建后显示功能提示弹窗
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (showFeatureDialog == true) {
-        _showFeatureDialog(context);
+        _showFeatureDialog(context, featureDialogBuilder);
       }
     });
 
@@ -133,57 +136,74 @@ class EditorHomePage extends StatelessWidget {
   }
 
   // 修改功能提示弹窗方法
-  void _showFeatureDialog(BuildContext context) {
+  void _showFeatureDialog(
+      BuildContext context, FeatureDialogBuilder? featureDialogBuilder) {
     // 保存当前上下文中的 cubit 引用
     final editorCubit = context.read<EditorHomeCubit>();
 
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text(
-            '新功能提示',
-            style: TextStyle(
-                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          content: const Text(
-            '我们添加了新的编辑功能，立即体验？',
-            style: TextStyle(
-                color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: const Text(
-                '稍后再说',
+        // 定义确认按钮的回调函数
+        onConfirm() {
+          Navigator.of(dialogContext).pop();
+
+          editorCubit.toEditor(
+            context, // 使用原始上下文
+            groupType ?? EditorType.crop,
+            subGroupId,
+          );
+        }
+
+        return featureDialogBuilder?.call(dialogContext, onConfirm) ??
+            AlertDialog(
+              title: const Text(
+                '新功能提示',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
+              ),
+              content: const Text(
+                '我们添加了新的编辑功能，立即体验？',
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
- 
-                editorCubit.toEditor(
-                  context, // 使用原始上下文
-                  groupType ?? EditorType.crop,
-                  subGroupId,
-                );
-              },
-              child: const Text(
-                '立即体验',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
-          ],
-        );
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text(
+                    '稍后再说',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+
+                    editorCubit.toEditor(
+                      context, // 使用原始上下文
+                      groupType ?? EditorType.crop,
+                      subGroupId,
+                    );
+                  },
+                  child: const Text(
+                    '立即体验',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ],
+            );
       },
     );
   }

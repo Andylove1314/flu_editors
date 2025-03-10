@@ -152,6 +152,7 @@ class EditorUtil {
     bool? showFeatureDialog,
     String? groupName,
     String? subGroupId,
+    FeatureDialogBuilder? featureDialogBuilder,
   }) async {
     _registerMultGlsl();
 
@@ -179,7 +180,7 @@ class EditorUtil {
     showFeatureDialog = showFeatureDialog;
     groupName = groupName;
     subGroupId = subGroupId;
-
+    featureDialogBuilder = featureDialogBuilder;
     if (EditorType.crop == type) {
       goCropPage(context, orignal);
       return;
@@ -246,6 +247,7 @@ class EditorUtil {
             showFeatureDialog: showFeatureDialog,
             groupType: groupType,
             subGroupId: subGroupId,
+            featureDialogBuilder: featureDialogBuilder,
           ),
         );
       },
@@ -835,3 +837,7 @@ class EditorUtil {
     return loginCheckCallback?.call();
   }
 }
+
+/// 功能提示弹窗构建器
+typedef FeatureDialogBuilder = Widget? Function(
+    BuildContext context, VoidCallback onConfirm);
