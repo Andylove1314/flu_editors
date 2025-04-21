@@ -12,7 +12,7 @@ import '../widgets/diff/diff_widget.dart';
 import '../widgets/main_pan.dart';
 
 
-class EditorHomePage extends StatelessWidget {
+class EditorHomePage extends StatefulWidget {
   final String orignal;
 
   final bool? showFeatureDialog;
@@ -20,28 +20,37 @@ class EditorHomePage extends StatelessWidget {
   final String? subGroupId;
   final FeatureDialogBuilder? featureDialogBuilder;
 
-  const EditorHomePage(
-      {super.key,
-      required this.orignal,
-      this.groupType,
-      this.subGroupId,
-      this.showFeatureDialog = false,
-      this.featureDialogBuilder});
+  const EditorHomePage({
+    super.key,
+    required this.orignal,
+    this.groupType,
+    this.subGroupId,
+    this.showFeatureDialog = false,
+    this.featureDialogBuilder
+  });
 
+  @override
+  State<EditorHomePage> createState() => _EditorHomePageState();
+}
+
+class _EditorHomePageState extends State<EditorHomePage> {
   final _panHeight = 100.0;
 
   @override
-  Widget build(BuildContext context) {
-    // 在构建后显示功能提示弹窗
+  void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (showFeatureDialog == true) {
-        _showFeatureDialog(context, featureDialogBuilder);
+      if (widget.showFeatureDialog == true) {
+        _showFeatureDialog(context, widget.featureDialogBuilder);
       }
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (orignal != context.read<EditorHomeCubit>().state.afterPath &&
+        if (widget.orignal != context.read<EditorHomeCubit>().state.afterPath &&
             !context.read<EditorHomeCubit>().saved) {
           showSaveImagePop(context, onSave: () {
             context.read<EditorHomeCubit>().getSaveImagePath().then((path) {
@@ -87,7 +96,7 @@ class EditorHomePage extends StatelessWidget {
           builder: (BuildContext context, EditorHomeState state) {
             return saveAction(
                 action:
-                    orignal != context.read<EditorHomeCubit>().state.afterPath
+                    widget.orignal != context.read<EditorHomeCubit>().state.afterPath
                         ? () async {
                             // 保存图片
                             final path = await context
@@ -106,7 +115,7 @@ class EditorHomePage extends StatelessWidget {
     return Stack(
       children: [
         FadeBeforeAfter(
-          before: Image.file(File(orignal),
+          before: Image.file(File(widget.orignal),
               width: MediaQuery.of(context).size.width, fit: BoxFit.contain),
           after: BlocBuilder<EditorHomeCubit, EditorHomeState>(
             builder: (BuildContext context, EditorHomeState state) {
@@ -150,8 +159,8 @@ class EditorHomePage extends StatelessWidget {
 
           editorCubit.toEditor(
             context, // 使用原始上下文
-            groupType ?? EditorType.crop,
-            subGroupId,
+            widget.groupType ?? EditorType.crop,
+            widget.subGroupId,
           );
         }
 
@@ -190,8 +199,8 @@ class EditorHomePage extends StatelessWidget {
 
                     editorCubit.toEditor(
                       context, // 使用原始上下文
-                      groupType ?? EditorType.crop,
-                      subGroupId,
+                      widget.groupType ?? EditorType.crop,
+                      widget.subGroupId,
                     );
                   },
                   child: const Text(
