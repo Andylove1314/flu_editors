@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "editor_name": "Image Editing",
   "editor_intensity": "Intensity",
   "editor_crop": "Crop",

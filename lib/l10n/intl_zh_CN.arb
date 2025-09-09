@@ -1,4 +1,5 @@
 {
+  "@@locale": "zh",
   "editor_name": "图片编辑",
   "editor_intensity": "程度",
   "editor_crop": "裁剪",

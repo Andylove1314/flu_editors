@@ -747,8 +747,12 @@ class AppLocalizationDelegate extends LocalizationsDelegate<EditorLang> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'hi'),
+      Locale.fromSubtags(languageCode: 'id'),
       Locale.fromSubtags(languageCode: 'ms'),
+      Locale.fromSubtags(languageCode: 'pt'),
       Locale.fromSubtags(languageCode: 'th'),
+      Locale.fromSubtags(languageCode: 'vi'),
       Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
     ];
   }
